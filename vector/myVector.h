@@ -141,7 +141,7 @@ MyVector<T, Alloc>::MyVector(const MyVector<T, Alloc>& v)
 template <class T, class Alloc>
 MyVector<T, Alloc>& MyVector<T, Alloc>::operator=(const MyVector<T, Alloc>& rhs)
 {
-    if(&rhs == this)
+    if(&rhs == this)12
         return *this;
 
     //TODO：原来的空间咋办？
@@ -190,22 +190,22 @@ void MyVector<T, Alloc>::reserve(size_type new_cap) //当new_cap大于当前容�
 template <class T, class Alloc>
 void MyVector<T, Alloc>::shrink_to_fit()
 {
-    // alloc_.deallocate(end_, end_of_storage_ - end_); //不能这么简单的释放部分, 分配器分配的时候
-    // end_of_storage_ = end_;
+    alloc_.deallocate(end_, end_of_storage_ - end_); //不能这么简单的释放部分, 分配器分配的时候
+    end_of_storage_ = end_;
     
-    //重新分配的方式, C++11的实现方式？
-    const size_type new_cap_size = size();
-    iterator new_start = alloc_.allocate(new_cap_size);
-    iterator new_end = new_start;
+    // 重新分配的方式, C++11的实现方式？
+    // const size_type new_cap_size = size();
+    // iterator new_start = alloc_.allocate(new_cap_size);
+    // iterator new_end = new_start;
 
-    new_end = std::uninitialized_copy(start_, end_, new_start);
+    // new_end = std::uninitialized_copy(start_, end_, new_start);
 
-    _destroy(start_, end_);
-    alloc_.deallocate(start_, end_of_storage_ - start_);
+    // _destroy(start_, end_);
+    // alloc_.deallocate(start_, end_of_storage_ - start_);
 
-    start_ = new_start;
-    end_ = new_end;
-    end_of_storage_ = new_start + new_cap_size;
+    // start_ = new_start;
+    // end_ = new_end;
+    // end_of_storage_ = new_start + new_cap_size;
 }
 
 template <class T, class Alloc>
