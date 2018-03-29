@@ -11,6 +11,7 @@
 #include <cstddef>
 #include <memory>
 #include <utility>
+#include <iostream> // for debug
 using namespace std; 
 
 namespace mystl {
@@ -20,7 +21,7 @@ namespace mystl {
 */
 typedef bool rb_tree_color_type;
 const rb_tree_color_type rb_tree_red = false;
-const rb_tree_color_type rb_tree_balck = true;
+const rb_tree_color_type rb_tree_black = true;
 
 template <class Value>
 class rb_tree_node {
@@ -105,7 +106,7 @@ public:
     void destroy_node(link_type p);
 
     // ctor
-    rb_tree(const Compare& comp);
+    rb_tree(const Compare& comp = Compare());
     ~rb_tree();
 
     // accessors
@@ -124,6 +125,11 @@ public:
 
     std::pair<iterator, bool> insert_unique(const value_type& x);
     iterator insert_equal(const value_type& x);
+    iterator find(const Key& x);
+    
+    void rb_tree_node_rebalance(link_type x, link_type& root);
+    void rb_tree_rotate_left(link_type x, link_type& root);
+    void rb_tree_rotate_right(link_type x, link_type& root);
 
 public:
     size_type node_count;
@@ -172,7 +178,7 @@ void rb_tree_iterator<Value, Ref, Ptr>::decrement()
 }
 
 template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
-rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::rb_tree(const Compare& comp = Compare()) : node_count(0), key_compare(comp)
+rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::rb_tree(const Compare& comp) : node_count(0), key_compare(comp)
 {
     header = get_node();
 
@@ -240,7 +246,7 @@ typename rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::iterator rb_tree<Key, 
     z->left = 0;
     z->right = 0;
 
-    // rebalance
+    rb_tree_node_rebalance(z, header->parent);
     ++node_count;
     return iterator(z);
 }
@@ -286,6 +292,113 @@ rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::insert_unique(const value_type&
 
     return std::pair<iterator, bool>(j, false);
 }
+
+template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
+void rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::rb_tree_node_rebalance(link_type x, link_type& root)
+{
+    x->color = rb_tree_red;
+    while(x != root && x->parent->color == rb_tree_red) {
+        if(x->parent == x->parent->parent->left) {
+            link_type y = x->parent->parent->right;
+            if(y && y->color == rb_tree_red) {
+                x->parent->color = rb_tree_black;
+                y->color = rb_tree_black;
+                x->parent->parent->color = rb_tree_red;
+                x = x->parent->parent;
+            } else {
+                if(x == x->parent->right) {
+                    x = x->parent;
+                    rb_tree_rotate_left(x, root);
+                }
+                x->parent->color = rb_tree_black;
+                x->parent->parent->color = rb_tree_red;
+                rb_tree_rotate_right(x->parent->parent, root);
+            }
+        }
+        else {
+            link_type y = x->parent->parent->left;
+            if(y && y->color == rb_tree_red) {
+                x->parent->color = rb_tree_black;
+                y->color = rb_tree_black;
+                x->parent->parent->color = rb_tree_red;
+                x = x->parent->parent;
+            } else {
+                if(x == x->parent->left) {
+                    x = x->parent;
+                    rb_tree_rotate_right(x, root);
+                }
+                x->parent->color = rb_tree_black;
+                x->parent->parent->color = rb_tree_red;
+                rb_tree_rotate_left(x->parent->parent, root);
+            }
+        }
+    }
+    root->color = rb_tree_black;
+}
+
+template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
+void rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::rb_tree_rotate_left(link_type x, link_type& root)
+{
+    std::cout << "rb_tree_rotate_left" << std::endl;    
+    link_type y = x->right;
+    x->right = y->left;
+    if(y->left != 0) {
+        y->left->parent = x;
+    }
+    y->parent = x->parent;
+
+    if(x == root) {
+        root = y;
+    } else if(x == x->parent->left) {
+        x->parent->left = y;
+    } else{
+        x->parent->right = y;
+    }
+    y->left = x;
+    x->parent = y;
+};
+
+template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
+void rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::rb_tree_rotate_right(link_type x, link_type& root)
+{
+    std::cout << "rb_tree_rotate_right" << std::endl;
+    link_type y = x->left;
+    x->left = y->right;
+    if(y->right != 0) {
+        y->right->parent = x;
+    }
+    y->parent = x->parent;
+
+    if(x == root) {
+        root = y;
+    } else if(x == x->parent->right) {
+        x->parent->right = y;
+    } else {
+        x->parent->left = y;
+    }
+    y->right = x;
+    x->parent = y;
+}
+
+template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
+typename rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::iterator 
+rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::find(const Key& k) 
+{
+    link_type y = header;  // y总是指向x的下一个节点，而不是x的父亲
+    link_type x = header->parent;
+
+    while(x != 0) {
+        if(!key_compare(KeyOfValue()(x->val), k)) {  // 比较器为真，往左走
+            y = x;
+            x = x->left;
+        } else {
+            x = x->right;
+        }
+    }
+    iterator j = iterator(y);
+    return (j == end() || key_compare(k, KeyOfValue()(j.node->val)) ? end() : j);
+}
+
 
 };
 
