@@ -1,0 +1,5 @@
+INCLUDE_DIRECTORIES(./Base ./Base/Profiler ./Containers ./Test)
+
+SET(CMAKE_SOURCE_DIR .)
+
+AUX_SOURCE_DIRECTORY(./Base SRC_LIST)
