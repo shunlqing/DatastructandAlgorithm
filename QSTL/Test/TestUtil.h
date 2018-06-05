@@ -9,7 +9,7 @@ namespace TinySTL{
 	namespace Test{
 
 		template<class Container>
-		void print_container(Container& container, const std::string& name = ""){//²»ÊÇÃ¿Ò»¸öÈÝÆ÷¶¼ÓÐconst_iterator
+		void print_container(Container& container, const std::string& name = ""){//ï¿½ï¿½ï¿½ï¿½Ã¿Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½const_iterator
 			std::cout << "Container " << name << " :";
 			for (auto val : container){
 				std::cout << val << " ";
@@ -18,7 +18,18 @@ namespace TinySTL{
 		}
 
 		template<class Container1, class Container2>
-		bool container_equal(Container1& con1, Container2& con2){//²»ÊÇÃ¿Ò»¸öÈÝÆ÷¶¼ÓÐconst_iterator
+		bool container_equal(Container1& con1, Container2& con2){//ï¿½ï¿½ï¿½ï¿½Ã¿Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½const_iterator
+			auto first1 = std::begin(con1), last1 = std::end(con1);
+			auto first2 = std::begin(con2), last2 = std::end(con2);
+			for (; first1 != last1 && first2 != last2; ++first1, ++first2){
+				if (*first1 != *first2)
+					return false;
+			}
+			return (first1 == last1 && first2 == last2);
+		}
+
+		template<class Container1, class Container2>
+		bool container_equal(const Container1& con1, const Container2& con2){//ï¿½ï¿½ï¿½ï¿½Ã¿Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½const_iterator
 			auto first1 = std::begin(con1), last1 = std::end(con1);
 			auto first2 = std::begin(con2), last2 = std::end(con2);
 			for (; first1 != last1 && first2 != last2; ++first1, ++first2){

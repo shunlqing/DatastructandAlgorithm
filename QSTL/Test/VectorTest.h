@@ -1,7 +1,7 @@
 #ifndef _VECTOR_TEST_H_
 #define _VECTOR_TEST_H_
 
-#include "../Vector.h"
+#include "Vector.h"
 #include "TestUtil.h"
 
 #include <vector>

@@ -107,7 +107,7 @@ namespace TinySTL{
 	template <class RandomAccessIterator>
 	void make_heap(RandomAccessIterator first, RandomAccessIterator last){
 		TinySTL::make_heap(first, last,
-			typename TinySTL::less<TinySTL::iterator_traits<RandomAccessIterator>::value_type>());
+			typename TinySTL::less<typename TinySTL::iterator_traits<RandomAccessIterator>::value_type>());
 	}
 	template <class RandomAccessIterator, class Compare>
 	void make_heap(RandomAccessIterator first, RandomAccessIterator last, Compare comp){
@@ -313,7 +313,7 @@ namespace TinySTL{
 	template <class ForwardIterator>
 	ForwardIterator adjacent_find(ForwardIterator first, ForwardIterator last){
 		return TinySTL::adjacent_find(first, last, 
-			equal_to<iterator_traits<typename ForwardIterator>::value_type>());
+			equal_to<typename iterator_traits<ForwardIterator>::value_type>());
 	}
 	template <class ForwardIterator, class BinaryPredicate>
 	ForwardIterator adjacent_find(ForwardIterator first, ForwardIterator last, BinaryPredicate pred){
@@ -474,7 +474,7 @@ namespace TinySTL{
 	}
 	template <class InputIterator, class Distance> 
 	void advance(InputIterator& it, Distance n){
-		typedef iterator_traits<InputIterator>::iterator_category iterator_category;
+		typedef typename TinySTL::iterator_traits<InputIterator>::iterator_category iterator_category;
 		_advance(it, n, iterator_category());
 	}
 	//********** [sort] ******************************

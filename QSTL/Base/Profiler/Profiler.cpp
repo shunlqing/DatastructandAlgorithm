@@ -30,6 +30,7 @@ namespace TinySTL{
 
 		size_t ProfilerInstance::memory(MemoryUnit mu){
 			size_t memory = 0;
+		#if 0
 		#ifdef WIN32
 			PROCESS_MEMORY_COUNTERS pmc;
 			HANDLE hProcess = GetCurrentProcess();
@@ -40,7 +41,7 @@ namespace TinySTL{
 			struct rusage usage;
 			if(getrusage(RUSAGE_SELF, &usage) == -1)
 				throw std::runtime_error("getrusage failed");
-			memory = usage.ru_maxrss / 1024;//如果某些linux平台不完全支持getrusage则ru_maxrss总是返回0
+			memory = usage.ru_maxrss / 1024;//濡傛灉鏌愪簺linux骞冲彴涓嶅畬鍏ㄦ敮鎸乬etrusage鍒檙u_maxrss鎬绘槸杩斿洖0
 		#endif
 			switch (mu){
 			case MemoryUnit::KB_:
@@ -54,6 +55,7 @@ namespace TinySTL{
 				break;
 			}
 			return memory;
+		#endif
 		}
 	}
 }

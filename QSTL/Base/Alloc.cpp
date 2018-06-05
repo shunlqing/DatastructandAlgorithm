@@ -16,11 +16,11 @@ namespace TinySTL{
 		}
 		size_t index = FREELIST_INDEX(bytes);
 		obj *list = free_list[index];
-		if (list){//æ­¤listè¿˜æœ‰ç©ºé—´ç»™æˆ‘ä»¬
+		if (list){//´Ëlist»¹ÓÐ¿Õ¼ä¸øÎÒÃÇ
 			free_list[index] = list->next;
 			return list;
 		}
-		else{//æ­¤listæ²¡æœ‰è¶³å¤Ÿçš„ç©ºé—´ï¼Œéœ€è¦ä»Žå†…å­˜æ± é‡Œé¢å–ç©ºé—´
+		else{//´ËlistÃ»ÓÐ×ã¹»µÄ¿Õ¼ä£¬ÐèÒª´ÓÄÚ´æ³ØÀïÃæÈ¡¿Õ¼ä
 			return refill(ROUND_UP(bytes));
 		}
 	}
@@ -41,24 +41,24 @@ namespace TinySTL{
 
 		return ptr;
 	}
-	//è¿”å›žä¸€ä¸ªå¤§å°ä¸ºnçš„å¯¹è±¡ï¼Œå¹¶ä¸”æœ‰æ—¶å€™ä¼šä¸ºé€‚å½“çš„free listå¢žåŠ èŠ‚ç‚¹
-	//å‡è®¾byteså·²ç»ä¸Šè°ƒä¸º8çš„å€æ•°
+	//·µ»ØÒ»¸ö´óÐ¡ÎªnµÄ¶ÔÏó£¬²¢ÇÒÓÐÊ±ºò»áÎªÊÊµ±µÄfree listÔö¼Ó½Úµã
+	//¼ÙÉèbytesÒÑ¾­ÉÏµ÷Îª8µÄ±¶Êý
 	void *alloc::refill(size_t bytes){
 		size_t nobjs = ENObjs::NOBJS;
-		//ä»Žå†…å­˜æ± é‡Œå–
+		//´ÓÄÚ´æ³ØÀïÈ¡
 		char *chunk = chunk_alloc(bytes, nobjs);
 		obj **my_free_list = 0;
 		obj *result = 0;
 		obj *current_obj = 0, *next_obj = 0;
 
-		if (nobjs == 1){//å–å‡ºçš„ç©ºé—´åªå¤Ÿä¸€ä¸ªå¯¹è±¡ä½¿ç”¨
+		if (nobjs == 1){//È¡³öµÄ¿Õ¼äÖ»¹»Ò»¸ö¶ÔÏóÊ¹ÓÃ
 			return chunk;
 		}
 		else{
 			my_free_list = free_list + FREELIST_INDEX(bytes);
 			result = (obj *)(chunk);
 			*my_free_list = next_obj = (obj *)(chunk + bytes);
-			//å°†å–å‡ºçš„å¤šä½™çš„ç©ºé—´åŠ å…¥åˆ°ç›¸åº”çš„free listé‡Œé¢åŽ»
+			//½«È¡³öµÄ¶àÓàµÄ¿Õ¼ä¼ÓÈëµ½ÏàÓ¦µÄfree listÀïÃæÈ¥
 			for (int i = 1;; ++i){
 				current_obj = next_obj;
 				next_obj = (obj *)((char *)next_obj + bytes);
@@ -73,25 +73,25 @@ namespace TinySTL{
 			return result;
 		}
 	}
-	//å‡è®¾byteså·²ç»ä¸Šè°ƒä¸º8çš„å€æ•°
+	//¼ÙÉèbytesÒÑ¾­ÉÏµ÷Îª8µÄ±¶Êý
 	char *alloc::chunk_alloc(size_t bytes, size_t& nobjs){
 		char *result = 0;
 		size_t total_bytes = bytes * nobjs;
 		size_t bytes_left = end_free - start_free;
 
-		if (bytes_left >= total_bytes){//å†…å­˜æ± å‰©ä½™ç©ºé—´å®Œå…¨æ»¡è¶³éœ€è¦
+		if (bytes_left >= total_bytes){//ÄÚ´æ³ØÊ£Óà¿Õ¼äÍêÈ«Âú×ãÐèÒª
 			result = start_free;
 			start_free = start_free + total_bytes;
 			return result;
 		}
-		else if (bytes_left >= bytes){//å†…å­˜æ± å‰©ä½™ç©ºé—´ä¸èƒ½å®Œå…¨æ»¡è¶³éœ€è¦ï¼Œä½†è¶³å¤Ÿä¾›åº”ä¸€ä¸ªæˆ–ä»¥ä¸Šçš„åŒºå—
+		else if (bytes_left >= bytes){//ÄÚ´æ³ØÊ£Óà¿Õ¼ä²»ÄÜÍêÈ«Âú×ãÐèÒª£¬µ«×ã¹»¹©Ó¦Ò»¸ö»òÒÔÉÏµÄÇø¿é
 			nobjs = bytes_left / bytes;
 			total_bytes = nobjs * bytes;
 			result = start_free;
 			start_free += total_bytes;
 			return result;
 		}
-		else{//å†…å­˜æ± å‰©ä½™ç©ºé—´è¿žä¸€ä¸ªåŒºå—çš„å¤§å°éƒ½æ— æ³•æä¾›
+		else{//ÄÚ´æ³ØÊ£Óà¿Õ¼äÁ¬Ò»¸öÇø¿éµÄ´óÐ¡¶¼ÎÞ·¨Ìá¹©
 			size_t bytes_to_get = 2 * total_bytes + ROUND_UP(heap_size >> 4);
 			if (bytes_left > 0){
 				obj **my_free_list = free_list + FREELIST_INDEX(bytes_left);

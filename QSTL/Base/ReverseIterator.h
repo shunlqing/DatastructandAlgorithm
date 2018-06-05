@@ -97,33 +97,33 @@ namespace TinySTL{
 			return it;
 		}
 	public:
-		template <class Iterator>
-		friend bool operator == (const reverse_iterator_t<Iterator>& lhs, 
-								const reverse_iterator_t<Iterator>& rhs);
-		template <class Iterator>
-		friend bool operator != (const reverse_iterator_t<Iterator>& lhs, 
-								const reverse_iterator_t<Iterator>& rhs);
-		template <class Iterator>
-		friend bool operator < (const reverse_iterator_t<Iterator>& lhs,
-								const reverse_iterator_t<Iterator>& rhs);
-		template <class Iterator>
-		friend bool operator <= (const reverse_iterator_t<Iterator>& lhs,
-								const reverse_iterator_t<Iterator>& rhs);
-		template <class Iterator>
-		friend bool operator > (const reverse_iterator_t<Iterator>& lhs,
-								const reverse_iterator_t<Iterator>& rhs);
-		template <class Iterator>
-		friend bool operator >= (const reverse_iterator_t<Iterator>& lhs,
-								const reverse_iterator_t<Iterator>& rhs);
+		template <class IteratorType>
+		friend bool operator == (const reverse_iterator_t<IteratorType>& lhs, 
+								const reverse_iterator_t<IteratorType>& rhs);
+		template <class IteratorType>
+		friend bool operator != (const reverse_iterator_t<IteratorType>& lhs, 
+								const reverse_iterator_t<IteratorType>& rhs);
+		template <class IteratorType>
+		friend bool operator < (const reverse_iterator_t<IteratorType>& lhs,
+								const reverse_iterator_t<IteratorType>& rhs);
+		template <class IteratorType>
+		friend bool operator <= (const reverse_iterator_t<IteratorType>& lhs,
+								const reverse_iterator_t<IteratorType>& rhs);
+		template <class IteratorType>
+		friend bool operator > (const reverse_iterator_t<IteratorType>& lhs,
+								const reverse_iterator_t<IteratorType>& rhs);
+		template <class IteratorType>
+		friend bool operator >= (const reverse_iterator_t<IteratorType>& lhs,
+								const reverse_iterator_t<IteratorType>& rhs);
 
-		template <class Iterator>
-		friend reverse_iterator_t<Iterator> operator + (
-			typename reverse_iterator_t<Iterator>::difference_type n,
-			const reverse_iterator_t<Iterator>& rev_it);
-		template <class Iterator>
-		friend typename reverse_iterator_t<Iterator>::difference_type operator- (
-			const reverse_iterator_t<Iterator>& lhs,
-			const reverse_iterator_t<Iterator>& rhs);
+		template <class IteratorType>
+		friend reverse_iterator_t<IteratorType> operator + (
+			typename reverse_iterator_t<IteratorType>::difference_type n,
+			const reverse_iterator_t<IteratorType>& rev_it);
+		template <class IteratorType>
+		friend typename reverse_iterator_t<IteratorType>::difference_type operator- (
+			const reverse_iterator_t<IteratorType>& lhs,
+			const reverse_iterator_t<IteratorType>& rhs);
 	};// end of reverse_iterator_t
 
 	template<class Iterator>

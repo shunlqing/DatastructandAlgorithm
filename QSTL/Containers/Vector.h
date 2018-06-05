@@ -91,7 +91,7 @@ public:
 	iterator erase(iterator first, iterator last);
 
 	//容器的空间配置器相关
-	Alloc get_allocator(){ return dataAllocator; }
+	Alloc get_allocator(){ return dataAllocator(); }
 private:
 	void destroyAndDeallocateAll();
 	void allocateAndFillN(const size_type n, const value_type& value);
@@ -111,10 +111,10 @@ private:
 	void reallocateAndFillN(iterator position, const size_type& n, const value_type& val);
 	size_type getNewCapacity(size_type len)const;
 public:
-	template<class T, class Alloc>
-	friend bool operator == (const vector<T, Alloc>& v1, const vector<T, Alloc>& v2);
-	template<class T, class Alloc>
-	friend bool operator != (const vector<T, Alloc>& v1, const vector<T, Alloc>& v2);
+	template<class T1, class Alloc_>
+	friend bool operator == (const vector<T1, Alloc_>& v1, const vector<T1, Alloc_>& v2);
+	template<class T1, class Alloc_>
+	friend bool operator != (const vector<T, Alloc_>& v1, const vector<T1, Alloc_>& v2);
 };// end of class vector
 
 //***********************构造，复制，析构相关***********************
@@ -167,7 +167,7 @@ vector<T, Alloc>& vector<T, Alloc>::operator = (vector&& v){
 }
 //*************和容器的容量相关******************************
 template<class T, class Alloc>
-void vector<T, Alloc>::resize(size_type n, value_type val = value_type()){
+void vector<T, Alloc>::resize(size_type n, value_type val){
 	if (n < size()){
 		dataAllocator::destroy(start_ + n, finish_);
 		finish_ = start_ + n;

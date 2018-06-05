@@ -14,7 +14,7 @@
 #include <Psapi.h>
 #pragma comment(lib, "psapi.lib")
 #else
-#include <sys/resource>
+#include <sys/resource.h>
 #include <sys/time.h>
 #endif
 
@@ -25,7 +25,7 @@ namespace TinySTL{
 		public:
 			typedef std::chrono::steady_clock SteadyClock;
 			typedef SteadyClock::time_point TimePoint;
-			typedef std::chrono::duration<double, std::ratio<1, 1>> DurationTime;//µ¥Î»Ãë
+			typedef std::chrono::duration<double, std::ratio<1, 1>> DurationTime;//ï¿½ï¿½Î»ï¿½ï¿½
 			enum class MemoryUnit{KB_, MB_, GB_};
 		private:
 			#define KB / 1024
@@ -36,14 +36,14 @@ namespace TinySTL{
 			static TimePoint startTime;
 			static TimePoint finishTime;
 		public:
-			static void start();//¿ªÊ¼¼ÆÊ±
-			static void finish();//½áÊø¼ÆÊ±
-			static void dumpDuringTime(std::ostream& os = std::cout);//´òÓ¡Ê±¼ä
+			static void start();//ï¿½ï¿½Ê¼ï¿½ï¿½Ê±
+			static void finish();//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±
+			static void dumpDuringTime(std::ostream& os = std::cout);//ï¿½ï¿½Ó¡Ê±ï¿½ï¿½
 
-			static double second();//ÒÔÃëÎªµ¥Î»·µ»ØÊ±¼ä
-			static double millisecond();//ÒÔºÁÃëÎªµ¥Î»·µ»ØÊ±¼ä
+			static double second();//ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
+			static double millisecond();//ï¿½Ôºï¿½ï¿½ï¿½Îªï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
 
-			static size_t memory(MemoryUnit mu = MemoryUnit::KB_);//²éÑ¯µ±Ç°³ÌÐòµÄÄÚ´æÊ¹ÓÃÁ¿
+			static size_t memory(MemoryUnit mu = MemoryUnit::KB_);//ï¿½ï¿½Ñ¯ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½
 		};
 	}
 }
